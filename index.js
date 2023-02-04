@@ -1,33 +1,32 @@
+const ratingEls = document.querySelectorAll(".rating");
 const btnEl = document.getElementById("btn");
-const jokeEl = document.getElementById("joke");
+const containerEl = document.getElementById("container");
 
-const apiKey = "lZerQjiecLaY10R88TbQjg==wzdfK8MeXDE3MSHD";
+let selectedRating = "";
 
-const options = {
-  method: "GET",
-  headers: {
-    "X-Api-Key": apiKey,
-  },
-  contentType: "application/json",
-};
-const apiURL = "https://api.api-ninjas.com/v1/dadjokes?limit=1";
+ratingEls.forEach((ratingEl) => {
+  addEventListener("click", (event) => {
+    removeActive();
+    selectedRating =
+      event.target.innerText || event.target.parentNode.innerText;
+    event.target.classList.add("active");
+    event.target.parentNode.classList.add("active");
+  });
+});
 
-async function getJoke() {
-  try {
-    jokeEl.innerText = "Updating...";
-    btnEl.disabled = true;
-    btnEl.innerText = "Loading...";
-    const response = await fetch(apiURL, options);
-    const data = await response.json();
-
-    jokeEl.innerText = data[0].joke;
-    btnEl.disabled = false;
-    btnEl.innerText = "Tell me a Joke";
-  } catch (error) {
-    jokeEl.innerText = "An error occurred.Please try again later";
-    btnEl.disabled = false;
-    btnEl.innerText = "Tell me a Joke";
+btnEl.addEventListener("click", () => {
+  if (selectedRating !== "") {
+    containerEl.innerHTML = `
+        <strong> Thank You! </strong>
+        <br>
+        <br>
+        <strong>Feedback: ${selectedRating} </strong>
+        <p>We will use your feedback to improve our customer support</p>
+        `;
   }
+});
+function removeActive() {
+  ratingEls.forEach((ratingEl) => {
+    ratingEl.classList.remove("active");
+  });
 }
-
-btnEl.addEventListener("click", getJoke);
